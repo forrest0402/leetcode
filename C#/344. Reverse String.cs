@@ -9,7 +9,6 @@
             char tempC = charArray[lPos];
             charArray[lPos] = charArray[rPos];
             charArray[rPos] = tempC;
-            charArray.Length
         }
         return new string(charArray);
     }
