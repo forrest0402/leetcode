@@ -12,7 +12,12 @@
 
 ## 231. Power of Two
 >There are errors with Math.Log(n, base)  
->e.g. Math.Log(536870912, 2) = 29.000000000000004 (expected 29) 
+>e.g. Math.Log(536870912, 2) = 29.000000000000004 (expected 29)  
+    
+    if (n == 0)
+      return false;
+    double ans = Math.Log(n, 2);
+    return Math.Min(ans - Math.Floor(ans), Math.Ceiling(ans) - ans) < 1e-10;
 
 [Power of Two] - 20160914
 
