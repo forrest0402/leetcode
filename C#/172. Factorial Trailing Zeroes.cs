@@ -1,4 +1,4 @@
-﻿// SUM(N/5^1,  N/5^2, N/5^3...)
+﻿// SUM(N/5^1,  N/5^2, N/5^3...)    
 public class Solution
 {
     public int TrailingZeroes(int n)
