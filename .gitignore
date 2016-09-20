@@ -10,7 +10,6 @@
 *.synctex.gz
 *.fdb_latexmk
 *.fls
-*.png
 *.vsdx
 *.zip
 *.ps
