@@ -1,6 +1,6 @@
 ﻿public class Solution
 {
-    public string AddBinary(string a, string b)
+    public string AddBinary(string a, string b) 
     {
         while (a.Length > 1 && a[0] == '0')
             a = a.Remove(0, 1);
