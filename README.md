@@ -42,6 +42,63 @@ Then we can calculate:
 
 [Reverse Bits] - 20160920
 
+## 204. Count Primes
+>[sieve of Eratosthenes] In mathematics, the sieve of Eratosthenes (Ancient Greek: κόσκινον Ἐρατοσθένους, kóskinon Eratosthénous), one of a number of prime number sieves, is a simple, ancient algorithm for finding all prime numbers up to any given limit. It does so by iteratively marking as composite (i.e., not prime) the multiples of each prime, starting with the multiples of 2.
+
+    private static readonly int MaxN = 5000000;
+    bool[] primes = new bool[MaxN];
+    //version 1
+    public void SieveOfEratosthenes_v1(int n)
+    {
+        primes[0] = primes[1] = false;
+        primes[2] = true;
+        for (int i = 3; i < n; i++)
+            primes[i] = i % 2 == 0 ? false : true;
+        for (int i = 3; i <= Math.Sqrt(n); i++)
+            if (primes[i])
+                for (int j = i * 2; j < n; j += i)
+                    primes[j] = false;
+    }
+    //skip duplicate numbers
+    public void SieveOfEratosthenes_v2(int n)
+    {
+        primes[0] = primes[1] = false;
+        primes[2] = true;
+        for (int i = 3; i < n; i++)
+            primes[i] = i % 2 == 0 ? false : true;
+        for (int i = 3; i <= Math.Sqrt(n); i++)
+            if (primes[i])
+                for (int j = i * i; j < n; j += 2*i)
+                    primes[j] = false;
+    }
+
+> A more fast method
+
+    bool[] isPrime = new bool[60000001];
+    int[] primes = new int[60000001 >> 1];
+    public void PrimeSieve(int n)
+    {
+        for (int i = 0; i < n; ++i)
+    		isPrime[i] = true;
+    	int index = 0;
+    	for (int i = 2; i < n; ++i)
+    	{
+    		if (isPrime[i])
+    			primes[index++] = i;
+    		for (int j = 0; j < index; ++j)
+    		{
+    			if (primes[j] * i > n)
+    				break;
+    			isPrime[primes[j] * i] = false;
+    			if (i % primes[j] == 0)
+    				break;
+    		}
+    	}
+    }
+
+>For the most fast method, see [Implementation of the Sieve of Atkin]. It is ten times faster than the above algorithms.
+
+[Count Primes] - 20160922
 
 ## 231. Power of Two
 >There are errors with Math.Log(n, base)  
@@ -94,3 +151,6 @@ Then we can calculate:
 [Intersection of Two Linked Lists]:https://leetcode.com/problems/intersection-of-two-linked-lists/
 [Floyd Cycle Detection Algorithm]:https://en.wikipedia.org/wiki/Cycle_detection
 [Reverse Bits]:https://leetcode.com/problems/reverse-bits/
+[Count Primes]:https://leetcode.com/problems/count-primes/
+[sieve of Eratosthenes]:https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes
+[Implementation of the Sieve of Atkin]:http://stackoverflow.com/questions/1569127/c-implementation-of-the-sieve-of-atkin
