@@ -97,6 +97,7 @@ Then we can calculate:
     }
 
 >For the most fast method, see [Implementation of the Sieve of Atkin]. It is ten times faster than the above algorithms.
+>One can also see [Eratosthenes-Sundaram-Atkins-Sieve-Implementation] for a survey.
 
 [Count Primes] - 20160922
 
@@ -154,3 +155,4 @@ Then we can calculate:
 [Count Primes]:https://leetcode.com/problems/count-primes/
 [sieve of Eratosthenes]:https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes
 [Implementation of the Sieve of Atkin]:http://stackoverflow.com/questions/1569127/c-implementation-of-the-sieve-of-atkin
+[Eratosthenes-Sundaram-Atkins-Sieve-Implementation]:http://www.codeproject.com/Articles/490085/Eratosthenes-Sundaram-Atkins-Sieve-Implementation
