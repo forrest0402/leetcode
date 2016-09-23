@@ -1,5 +1,5 @@
 ﻿public class Solution
-{
+{ 
     public long TenPow(int n)
     {
         long ans = 1;
