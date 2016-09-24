@@ -112,6 +112,19 @@ Then we can calculate:
 
 [Power of Two] - 20160914
 
+## 338. Counting Bits
+>Dynamic Programming: the number of ones in counts[i] equals the number of ones in counts[i/2] because i/2 means shifting i right except that we don't know whether the last digit of i is 1.
+
+    public int[] CountBits(int num) 
+    {
+        int[] counts = new int[num+1];
+        for(int i = 1; i < counts.Length; i++)
+            counts[i] = counts[i/2] + (i % 2);
+        return counts;
+    }
+
+[Counting Bits] - 20160924
+
 ## 344. Reverse String
 >When to change a string, use toCharArray() method and use new string() to convert char[] to string back. Do not build a new string and add chars to it continuously because it is inefficient.
 
@@ -156,3 +169,4 @@ Then we can calculate:
 [sieve of Eratosthenes]:https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes
 [Implementation of the Sieve of Atkin]:http://stackoverflow.com/questions/1569127/c-implementation-of-the-sieve-of-atkin
 [Eratosthenes-Sundaram-Atkins-Sieve-Implementation]:http://www.codeproject.com/Articles/490085/Eratosthenes-Sundaram-Atkins-Sieve-Implementation
+[Counting Bits]:https://leetcode.com/problems/counting-bits/
