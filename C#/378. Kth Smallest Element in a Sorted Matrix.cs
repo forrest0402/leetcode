@@ -4,24 +4,24 @@
     {
         int row = matrix.GetLength(0);
         int col = matrix.GetLength(1);
-        SortedList<int, Node> queue = new SortedList<int, Node>(new DuplicateKeyComparer<int>());
-        queue.Add(matrix[0, 0], new Node() { i = 0, j = 0 });
+        SortedList<int, Tuple<int, int>> queue = new SortedList<int, Tuple<int, int>>(new DuplicateKeyComparer<int>());
+        queue.Add(matrix[0, 0], new Tuple<int, int>(0, 0));
         bool[,] visited = new bool[row, col];
         while (queue.Count > 0)
         {
-            Node node = queue.ElementAt(0).Value;
+            Tuple<int, int> node = queue.ElementAt(0).Value;
             if (--k == 0)
                 return queue.ElementAt(0).Key;
             queue.RemoveAt(0);
-            if (node.i + 1 < row && !visited[node.i + 1, node.j])
+            if (node.Item1 + 1 < row && !visited[node.Item1 + 1, node.Item2])
             {
-                queue.Add(matrix[node.i + 1, node.j], new Node() { i = node.i + 1, j = node.j });
-                visited[node.i + 1, node.j] = true;
+                queue.Add(matrix[node.Item1 + 1, node.Item2], new Tuple<int, int>(node.Item1 + 1, node.Item2));
+                visited[node.Item1 + 1, node.Item2] = true;
             }
-            if (node.j + 1 < col && !visited[node.i, node.j + 1])
+            if (node.Item2 + 1 < col && !visited[node.Item1, node.Item2 + 1])
             {
-                queue.Add(matrix[node.i, node.j + 1], new Node() { i = node.i, j = node.j + 1 });
-                visited[node.i, node.j + 1] = true;
+                queue.Add(matrix[node.Item1, node.Item2 + 1], new Tuple<int, int>(node.Item1, node.Item2 + 1));
+                visited[node.Item1, node.Item2 + 1] = true;
             }
         }
         return -1;
@@ -37,17 +37,11 @@ public class DuplicateKeyComparer<TKey> : IComparer<TKey> where TKey : IComparab
     public int Compare(TKey x, TKey y)
     {
         int result = x.CompareTo(y);
-
         if (result == 0)
             return 1;   // Handle equality as beeing greater
         else
             return result;
     }
-}
-public class Node
-{
-    public int i;
-    public int j;
 }
 
 
