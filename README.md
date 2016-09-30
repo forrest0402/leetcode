@@ -1,4 +1,4 @@
-# LeetCode 
+# LeetCode
 [LeetCode OJ]
 
 ## 160. Intersection of Two Linked Lists
@@ -104,7 +104,7 @@ Then we can calculate:
 ## 231. Power of Two
 >There are errors with Math.Log(n, base)  
 >e.g. Math.Log(536870912, 2) = 29.000000000000004 (expected 29)  
-    
+
     if (n == 0)
       return false;
     double ans = Math.Log(n, 2);
@@ -115,7 +115,7 @@ Then we can calculate:
 ## 338. Counting Bits
 >Dynamic Programming: the number of ones in counts[i] equals the number of ones in counts[i/2] because i/2 means shifting i right except that we don't know whether the last digit of i is 1.
 
-    public int[] CountBits(int num) 
+    public int[] CountBits(int num)
     {
         int[] counts = new int[num+1];
         for(int i = 1; i < counts.Length; i++)
@@ -157,6 +157,65 @@ Then we can calculate:
 [Guess Number Higher or Lower] - 20160919
 
 
+## 378. Kth Smallest Element in a Sorted Matrix
+>BFS + PriorityQueue  
+Notice the usage of SortedList.
+
+```
+public class Solution
+{
+    public int KthSmallest(int[,] matrix, int k)
+    {
+        int row = matrix.GetLength(0);
+        int col = matrix.GetLength(1);
+        SortedList<int, Node> queue = new SortedList<int, Node>(new DuplicateKeyComparer<int>());
+        queue.Add(matrix[0, 0], new Node() { i = 0, j = 0 });
+        bool[,] visited = new bool[row, col];
+        while (queue.Count > 0)
+        {
+            Node node = queue.ElementAt(0).Value;
+            if (--k == 0)
+                return queue.ElementAt(0).Key;
+            queue.RemoveAt(0);
+            if (node.i + 1 < row && !visited[node.i + 1, node.j])
+            {
+                queue.Add(matrix[node.i + 1, node.j], new Node() { i = node.i + 1, j = node.j });
+                visited[node.i + 1, node.j] = true;
+            }
+            if (node.j + 1 < col && !visited[node.i, node.j + 1])
+            {
+                queue.Add(matrix[node.i, node.j + 1], new Node() { i = node.i, j = node.j + 1 });
+                visited[node.i, node.j + 1] = true;
+            }
+        }
+        return -1; //Not find
+    }
+}
+/// <summary>
+/// Comparer for comparing two keys, handling equality as beeing greater
+/// Use this Comparer e.g. with SortedLists or SortedDictionaries, that don't allow duplicate keys
+/// </summary>
+/// <typeparam name="TKey"></typeparam>
+public class DuplicateKeyComparer<TKey> : IComparer<TKey> where TKey : IComparable
+{
+    public int Compare(TKey x, TKey y)
+    {
+        int result = x.CompareTo(y);
+        if (result == 0)
+            return 1;   // Handle equality as beeing greater
+        else
+            return result;
+    }
+}
+public class Node
+{
+    public int i { get; set; }
+    public int j { get; set; }
+}
+```
+
+[Kth Smallest Element in a Sorted Matrix] - 20160930
+
 [LeetCode OJ]:https://leetcode.com/
 [Reverse String]: https://leetcode.com/problems/reverse-string/
 [Sum of Two Integers]:https://leetcode.com/problems/sum-of-two-integers/
@@ -170,3 +229,4 @@ Then we can calculate:
 [Implementation of the Sieve of Atkin]:http://stackoverflow.com/questions/1569127/c-implementation-of-the-sieve-of-atkin
 [Eratosthenes-Sundaram-Atkins-Sieve-Implementation]:http://www.codeproject.com/Articles/490085/Eratosthenes-Sundaram-Atkins-Sieve-Implementation
 [Counting Bits]:https://leetcode.com/problems/counting-bits/
+[Kth Smallest Element in a Sorted Matrix]:https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix/
