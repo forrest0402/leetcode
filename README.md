@@ -112,6 +112,35 @@ Then we can calculate:
 
 [Power of Two] - 20160914
 
+## 337. House Robber III
+>Dynamic Programming: For an array of integers, a classic question is to find the max-sum without picking two adjacent numbers. Usually, we can use a dp[i]=max(dp[i-1], dp[i-2]+c[i]) to find the max-sum. This time, we got a binary tree, thus, we can use a two-dimension dp to finish the task.
+
+```C#
+public class Solution
+{
+    private const int NOROB = 0;
+    private const int ROB = 1;
+    private int[] DP(TreeNode root)
+    {
+        if (root == null)
+            return new int[] { 0, 0 };
+        int[] dpLeft = DP(root.left);
+        int[] dpRight = DP(root.right);
+        int robThis = dpLeft[NOROB] + dpRight[NOROB] + root.val;
+        int noRobThis = Math.Max(dpLeft[ROB], dpLeft[NOROB]) +
+            Math.Max(dpRight[ROB], dpRight[NOROB]);
+        return new int[] { noRobThis, robThis };
+    }
+    public int Rob(TreeNode root)
+    {
+        int[] dp = DP(root);
+        return Math.Max(dp[NOROB], dp[ROB]);
+    }
+}
+```
+
+[House Robber III] - 20161005
+
 ## 338. Counting Bits
 >Dynamic Programming: the number of ones in counts[i] equals the number of ones in counts[i/2] because i/2 means shifting i right except that we don't know whether the last digit of i is 1.
 
@@ -211,6 +240,37 @@ public class DuplicateKeyComparer<TKey> : IComparer<TKey> where TKey : IComparab
 
 [Kth Smallest Element in a Sorted Matrix] - 20160930
 
+## Basic operations on Binary Tree
+### Traverse by level
+```C#
+IList<IList<int>> TraByLevelOrder = null;
+public void Traverse(TreeNode node, int level)
+{
+    if (node == null)
+        return;
+    if (TraByLevelOrder.Count - 1 >= level)
+    {
+        if (node.left != null)
+            TraByLevelOrder[level].Add(node.left.val);
+        if (node.right != null)
+            TraByLevelOrder[level].Add(node.right.val);
+    }
+    else
+    {
+        IList<int> list = new List<int>();
+        if (node.left != null)
+            list.Add(node.left.val);
+        if (node.right != null)
+            list.Add(node.right.val);
+        if (list.Count > 0)
+            TraByLevelOrder.Add(list);
+    }
+    Traverse(node.left, level + 1);
+    Traverse(node.right, level + 1);
+}
+```
+### Find Kth Smallest Element in a BST
+
 [LeetCode OJ]:https://leetcode.com/
 [Reverse String]: https://leetcode.com/problems/reverse-string/
 [Sum of Two Integers]:https://leetcode.com/problems/sum-of-two-integers/
@@ -225,3 +285,4 @@ public class DuplicateKeyComparer<TKey> : IComparer<TKey> where TKey : IComparab
 [Eratosthenes-Sundaram-Atkins-Sieve-Implementation]:http://www.codeproject.com/Articles/490085/Eratosthenes-Sundaram-Atkins-Sieve-Implementation
 [Counting Bits]:https://leetcode.com/problems/counting-bits/
 [Kth Smallest Element in a Sorted Matrix]:https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix/
+[House Robber III]:https://leetcode.com/problems/house-robber-iii/

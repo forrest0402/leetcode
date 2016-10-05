@@ -9,17 +9,17 @@
  */
 public class Solution
 {
-    IList<IList<int>> ans = null;
+    IList<IList<int>> TranByLevelOrder = null;
     public void Tranverse(TreeNode node, int level)
     {
         if (node == null)
             return;
-        if (ans.Count - 1 >= level)
+        if (TranByLevelOrder.Count - 1 >= level)
         {
             if (node.left != null)
-                ans[level].Add(node.left.val);
+                TranByLevelOrder[level].Add(node.left.val);
             if (node.right != null)
-                ans[level].Add(node.right.val);
+                TranByLevelOrder[level].Add(node.right.val);
         }
         else
         {
@@ -29,7 +29,7 @@ public class Solution
             if (node.right != null)
                 list.Add(node.right.val);
             if (list.Count > 0)
-                ans.Add(list);
+                TranByLevelOrder.Add(list);
         }
         Tranverse(node.left, level + 1);
         Tranverse(node.right, level + 1);
@@ -38,9 +38,9 @@ public class Solution
     {
         if (root == null)
             return new List<IList<int>>();
-        ans = new List<IList<int>>();
-        ans.Add(new List<int>() { root.val });
+        TranByLevelOrder = new List<IList<int>>();
+        TranByLevelOrder.Add(new List<int>() { root.val });
         Tranverse(root, 1);
-        return ans;
+        return TranByLevelOrder;
     }
 }
