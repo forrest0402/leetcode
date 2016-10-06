@@ -186,6 +186,23 @@ public class Solution
 [Guess Number Higher or Lower] - 20160919
 
 
+## 377. Combination Sum IV
+>Dynamic Programming: The solution is similar to [Climbing Stairs]. In [Climbing Stairs], we have n steps, and we can define dp[i]=dp[i-1]+dp[i-2]. This time, we can add any number from the given *nums*. Therefore, we subsitute nums[j] for 1 and 2 and define dp[i]=sum(dp[i-nums[j]]). 
+
+```C#
+public int CombinationSum4(int[] nums, int target)
+{
+    int[] dp = new int[target + 1];
+    dp[0] = 1;
+    for (int i = 1; i <= target; ++i)
+        for (int j = 0; j < nums.Length; ++j)
+            if (i - nums[j] >= 0)
+                dp[i] += dp[i - nums[j]];
+    return dp[target];
+}
+```
+[Combination Sum IV] - 20161006
+
 ## 378. Kth Smallest Element in a Sorted Matrix
 >BFS + PriorityQueue  
 Notice the usage of SortedList and Tuple.
@@ -286,3 +303,5 @@ public void Traverse(TreeNode node, int level)
 [Counting Bits]:https://leetcode.com/problems/counting-bits/
 [Kth Smallest Element in a Sorted Matrix]:https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix/
 [House Robber III]:https://leetcode.com/problems/house-robber-iii/
+[Combination Sum IV]:https://leetcode.com/problems/combination-sum-iv/
+[Climbing Stairs]:https://leetcode.com/problems/climbing-stairs/
