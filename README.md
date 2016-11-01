@@ -187,7 +187,7 @@ public class Solution
 
 
 ## 377. Combination Sum IV
->Dynamic Programming: The solution is similar to [Climbing Stairs]. In [Climbing Stairs], we have n steps, and we can define dp[i]=dp[i-1]+dp[i-2]. This time, we can add any number from the given *nums*. Therefore, we subsitute nums[j] for 1 and 2 and define dp[i]=sum(dp[i-nums[j]]). 
+>Dynamic Programming: The solution is similar to [Climbing Stairs]. In [Climbing Stairs], we have n steps, and we can define dp[i]=dp[i-1]+dp[i-2]. This time, we can add any number from the given *nums*. Therefore, we subsitute nums[j] for 1 and 2 and define dp[i]=sum(dp[i-nums[j]]).
 
 ```C#
 public int CombinationSum4(int[] nums, int target)
@@ -257,6 +257,40 @@ public class DuplicateKeyComparer<TKey> : IComparer<TKey> where TKey : IComparab
 
 [Kth Smallest Element in a Sorted Matrix] - 20160930
 
+## 436. Find Right Interval
+>Use the list of anonymous types
+
+```C#
+public class Solution
+{
+    public int[] FindRightInterval(Interval[] intervals)
+    {
+        int[] ans = new int[intervals.Length];
+        var tuples = new[] { new { start = intervals[0].start, end = intervals[0].end, position = 0 } }.ToList();
+        for (int i = 1; i < intervals.Length; ++i)
+            tuples.Add(new { start = intervals[i].start, end = intervals[i].end, position = i });
+        tuples = tuples.OrderBy(o => o.start).ToList();
+        foreach (var tuple in tuples)
+        {
+            int l = 0, r = tuples.Count - 1, mid = 0;
+            while (l <= r)
+            {
+                mid = l + (r - l) / 2;
+                if (tuples[mid].start == tuple.end) break;
+                else if (tuples[mid].start > tuple.end) r = mid - 1;
+                else l = mid + 1;
+            }
+            if (tuples[mid].start < tuple.end) ++mid;
+            if (mid < tuples.Count && tuples[mid].start >= tuple.end)
+                ans[tuple.position] = tuples[mid].position;
+            else ans[tuple.position] = -1;
+        }
+        return ans;
+    }
+}
+```
+[Find Right Interval] - 20161101
+
 ## Basic operations on Binary Tree
 ### Traverse by level
 ```C#
@@ -305,3 +339,4 @@ public void Traverse(TreeNode node, int level)
 [House Robber III]:https://leetcode.com/problems/house-robber-iii/
 [Combination Sum IV]:https://leetcode.com/problems/combination-sum-iv/
 [Climbing Stairs]:https://leetcode.com/problems/climbing-stairs/
+[Find Right Interval]:https://leetcode.com/problems/find-right-interval/
