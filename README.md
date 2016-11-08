@@ -322,7 +322,7 @@ public void Traverse(TreeNode node, int level)
 ```
 ### Find Kth Smallest Element in a BST
 
-## Template
+## Templates of basic data structures
 ### Binary Indexed Tree
 ```C#
 class BinaryIndexedTree
@@ -373,8 +373,8 @@ class SegmentTree
     struct SegsegmentTreeNode
     {
         public long l, r;
-        public long add, sum;//修改求和
-        public long min, max;//最值标记
+        public long add, sum;
+        public long min, max;
     }
     private long SegT_L(long x)
     {
