@@ -322,6 +322,250 @@ public void Traverse(TreeNode node, int level)
 ```
 ### Find Kth Smallest Element in a BST
 
+## Template
+### Binary Indexed Tree
+```C#
+class BinaryIndexedTree
+{
+    private int[] array = null;
+    private int capacity = 0;
+    public BinaryIndexedTree(int capacity)
+    {
+        array = new int[capacity];
+        this.capacity = capacity;
+    }
+    private int Lowbit(int num)
+    {
+        return num & (-num);
+    }
+    public void Plus(int pos, int num)
+    {
+        while (pos <= this.capacity)
+        {
+            array[pos] += num;
+            pos += Lowbit(pos);
+        }
+    }
+    public int Sum(int end)
+    {
+        int sum = 0;
+        while (end > 0)
+        {
+            sum += array[end];
+            end -= Lowbit(end);
+        }
+        return sum;
+    }
+}
+```
+### Segment tree
+```C#
+class SegmentTree
+{
+    private SegsegmentTreeNode[] segmentTree = null;
+    private int[] originalArray = null;
+    public SegmentTree(int[] array)
+    {
+        segmentTree = new SegsegmentTreeNode[4 * array.Length];
+        SegT_Build(1, array.Length, 1);
+        originalArray = array;
+    }
+    struct SegsegmentTreeNode
+    {
+        public long l, r;
+        public long add, sum;//修改求和
+        public long min, max;//最值标记
+    }
+    private long SegT_L(long x)
+    {
+        return x << 1;
+    }
+    private long SegT_R(long x)
+    {
+        return x << 1 | 1;
+    }
+    private long SeT_SZ(long x)
+    {
+        return segmentTree[x].r - segmentTree[x].l + 1;
+    }
+    private void SegT_Update(long p)
+    {
+        segmentTree[p].sum = segmentTree[SegT_L(p)].sum + segmentTree[SegT_R(p)].sum;
+        segmentTree[p].max = Math.Max(segmentTree[SegT_L(p)].max, segmentTree[SegT_R(p)].max);
+        segmentTree[p].min = Math.Min(segmentTree[SegT_L(p)].min, segmentTree[SegT_R(p)].min);
+        return;
+    }
+
+    private void SegT_Spread(long p)
+    {
+        if (segmentTree[p].add == 0) return;
+        segmentTree[SegT_L(p)].max += segmentTree[p].add;
+        segmentTree[SegT_R(p)].max += segmentTree[p].add;
+        segmentTree[SegT_L(p)].min += segmentTree[p].add;
+        segmentTree[SegT_R(p)].min += segmentTree[p].add;
+
+        segmentTree[SegT_L(p)].add += segmentTree[p].add;
+        segmentTree[SegT_R(p)].add += segmentTree[p].add;
+        segmentTree[SegT_L(p)].sum += segmentTree[p].add * SeT_SZ(SegT_L(p));
+        segmentTree[SegT_R(p)].sum += segmentTree[p].add * SeT_SZ(SegT_R(p));
+        segmentTree[p].add = 0;//!!!!!!!
+        SegT_Update(p);
+        return;
+    }
+
+    private void SegT_Build(long l, long r, long p)
+    {
+        segmentTree[p].l = l;
+        segmentTree[p].r = r;
+        if (l == r)
+        {
+            segmentTree[p].min = segmentTree[p].max = segmentTree[p].sum = originalArray[l];
+            return;
+        }
+        long mid = (segmentTree[p].l + segmentTree[p].r) >> 1;
+        SegT_Build(l, mid, SegT_L(p));
+        SegT_Build(mid + 1, r, SegT_R(p));
+        SegT_Update(p);
+        return;
+    }
+
+    private void SegT_Change(long l, long r, long p, long v)
+    {
+        if (l <= segmentTree[p].l && segmentTree[p].r <= r)
+        {
+            segmentTree[p].add += v;
+            segmentTree[p].min += v;
+            segmentTree[p].max += v;
+            segmentTree[p].sum += v * SeT_SZ(p);
+            return;
+        }
+        SegT_Spread(p);
+        long mid = (segmentTree[p].l + segmentTree[p].r) >> 1;
+        if (l <= mid) SegT_Change(l, r, SegT_L(p), v);
+        if (mid < r) SegT_Change(l, r, SegT_R(p), v);
+        SegT_Update(p);
+        return;
+    }
+
+    public long AskSum(long l, long r, long p = 1)
+    {
+        if (l <= segmentTree[p].l && segmentTree[p].r <= r)
+        {
+            return segmentTree[p].sum;
+        }
+        SegT_Spread(p);
+        long ans = 0, mid = (segmentTree[p].l + segmentTree[p].r) >> 1;
+        if (l <= mid) ans += AskSum(l, r, SegT_L(p));
+        if (mid < r) ans += AskSum(l, r, SegT_R(p));
+        SegT_Update(p);
+        return ans;
+    }
+
+    public long AskMax(long l, long r, long p = 1)
+    {
+        if (l <= segmentTree[p].l && segmentTree[p].r <= r)
+        {
+            return segmentTree[p].max;
+        }
+        SegT_Spread(p);
+        long ans = 0, mid = (segmentTree[p].l + segmentTree[p].r) >> 1;
+        if (l <= mid) ans = Math.Max(ans, AskMax(l, r, SegT_L(p)));
+        if (mid < r) ans = Math.Max(ans, AskMax(l, r, SegT_R(p)));
+        SegT_Update(p);
+        return ans;
+    }
+
+    public long AskMin(long l, long r, long p = 1)
+    {
+        if (l <= segmentTree[p].l && segmentTree[p].r <= r)
+        {
+            return segmentTree[p].min;
+        }
+        SegT_Spread(p);
+        long ans = int.MaxValue, mid = (segmentTree[p].l + segmentTree[p].r) >> 1;
+        if (l <= mid) ans = Math.Min(ans, AskMin(l, r, SegT_L(p)));
+        if (mid < r) ans = Math.Min(ans, AskMin(l, r, SegT_R(p)));
+        SegT_Update(p);
+        return ans;
+    }
+}
+```
+### Suffix array
+```C#
+class SuffixArray
+{
+    public int[] Height = null, SA = null, Rank = null;
+    private int[] countSort = null, tp = null, digitArray = null;
+    int n, maxN = 127;
+    public SuffixArray(int[] array)
+    {
+        n = array.Length;
+        Height = new int[n + 1];
+        SA = new int[n + 1];
+        Rank = new int[n + 1];
+        digitArray = new int[n + 1];
+        for (int i = 0; i < n; i++)
+        {
+            digitArray[i + 1] = array[i];
+            if (maxN < array[i]) maxN = array[i];
+        }
+        countSort = new int[maxN + 1];
+        tp = new int[n + 1];
+        Suffix();
+    }
+    public SuffixArray(string array)
+    {
+        n = array.Length;
+        Height = new int[n + 1];
+        SA = new int[n + 1];
+        Rank = new int[n + 1];
+        digitArray = new int[n + 1];
+        for (int i = 0; i < n; i++)
+        {
+            digitArray[i + 1] = array[i];
+            if (maxN < array[i]) maxN = array[i];
+        }
+        countSort = new int[maxN + 1];
+        tp = new int[n + 1];
+        Suffix();
+    }
+    private void RSort()
+    {
+        for (int i = 0; i <= maxN; i++) countSort[i] = 0;
+        for (int i = 1; i <= n; i++) countSort[Rank[tp[i]]]++;
+        for (int i = 1; i <= maxN; i++) countSort[i] += countSort[i - 1];
+        for (int i = n; i >= 1; i--) SA[countSort[Rank[tp[i]]]--] = tp[i];
+    }
+    private bool cmp(int[] f, int x, int y, int w) { return f[x] == f[y] && f[x + w] == f[y + w]; }
+    private void Suffix()
+    {
+        //SA
+        for (int i = 1; i <= n; i++)
+        {
+            Rank[i] = digitArray[i];
+            tp[i] = i;
+        }
+        RSort();
+        for (int w = 1, p = 1, i; p < n; w += w, maxN = p)
+        {
+            for (p = 0, i = n - w + 1; i <= n; i++) tp[++p] = i;
+            for (i = 1; i <= n; i++) if (SA[i] > w) tp[++p] = SA[i] - w;
+            RSort();
+            int[] temp = Rank;
+            Rank = tp;
+            tp = temp;
+            Rank[SA[1]] = p = 1;
+            for (i = 2; i <= n; i++) Rank[SA[i]] = cmp(tp, SA[i], SA[i - 1], w) ? p : ++p;
+        }
+        //Height
+        int j, k = 0;
+        for (int i = 1; i <= n; Height[Rank[i++]] = k)
+            for (k = k != 0 ? k - 1 : k, j = SA[Rank[i] - 1]; digitArray[i + k] == digitArray[j + k]; ++k) ;
+    }
+}
+```
+
+
 [LeetCode OJ]:https://leetcode.com/
 [Reverse String]: https://leetcode.com/problems/reverse-string/
 [Sum of Two Integers]:https://leetcode.com/problems/sum-of-two-integers/
