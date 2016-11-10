@@ -367,8 +367,8 @@ class SegmentTree
     public SegmentTree(int[] array)
     {
         segmentTree = new SegsegmentTreeNode[4 * array.Length];
-        SegT_Build(1, array.Length, 1);
         originalArray = array;
+        SegT_Build(1, array.Length, 1);
     }
     struct SegsegmentTreeNode
     {
@@ -419,7 +419,7 @@ class SegmentTree
         segmentTree[p].r = r;
         if (l == r)
         {
-            segmentTree[p].min = segmentTree[p].max = segmentTree[p].sum = originalArray[l];
+            segmentTree[p].min = segmentTree[p].max = segmentTree[p].sum = originalArray[l-1];
             return;
         }
         long mid = (segmentTree[p].l + segmentTree[p].r) >> 1;
