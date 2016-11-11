@@ -368,121 +368,124 @@ class SegmentTree
     {
         segmentTree = new SegsegmentTreeNode[4 * array.Length];
         originalArray = array;
-        SegT_Build(1, array.Length, 1);
+        SegT_Build(0, array.Length - 1, 1);
     }
     struct SegsegmentTreeNode
     {
-        public long l, r;
-        public long add, sum;
-        public long min, max;
+        public int Left, Right;
+        public long add, Sum;
+        public long Min, Max;
     }
-    private long SegT_L(long x)
+    private int SegT_L(int x)
     {
         return x << 1;
     }
-    private long SegT_R(long x)
+    private int SegT_R(int x)
     {
         return x << 1 | 1;
     }
-    private long SeT_SZ(long x)
+    private int SegT_SZ(int x)
     {
-        return segmentTree[x].r - segmentTree[x].l + 1;
+        return segmentTree[x].Right - segmentTree[x].Left + 1;
     }
-    private void SegT_Update(long p)
+    private void SegT_Update(int p)
     {
-        segmentTree[p].sum = segmentTree[SegT_L(p)].sum + segmentTree[SegT_R(p)].sum;
-        segmentTree[p].max = Math.Max(segmentTree[SegT_L(p)].max, segmentTree[SegT_R(p)].max);
-        segmentTree[p].min = Math.Min(segmentTree[SegT_L(p)].min, segmentTree[SegT_R(p)].min);
+        segmentTree[p].Sum = segmentTree[SegT_L(p)].Sum + segmentTree[SegT_R(p)].Sum;
+        segmentTree[p].Max = Math.Max(segmentTree[SegT_L(p)].Max, segmentTree[SegT_R(p)].Max);
+        segmentTree[p].Min = Math.Min(segmentTree[SegT_L(p)].Min, segmentTree[SegT_R(p)].Min);
         return;
     }
 
-    private void SegT_Spread(long p)
+    private void SegT_Spread(int p)
     {
         if (segmentTree[p].add == 0) return;
-        segmentTree[SegT_L(p)].max += segmentTree[p].add;
-        segmentTree[SegT_R(p)].max += segmentTree[p].add;
-        segmentTree[SegT_L(p)].min += segmentTree[p].add;
-        segmentTree[SegT_R(p)].min += segmentTree[p].add;
+        segmentTree[SegT_L(p)].Max += segmentTree[p].add;
+        segmentTree[SegT_R(p)].Max += segmentTree[p].add;
+        segmentTree[SegT_L(p)].Min += segmentTree[p].add;
+        segmentTree[SegT_R(p)].Min += segmentTree[p].add;
 
         segmentTree[SegT_L(p)].add += segmentTree[p].add;
         segmentTree[SegT_R(p)].add += segmentTree[p].add;
-        segmentTree[SegT_L(p)].sum += segmentTree[p].add * SeT_SZ(SegT_L(p));
-        segmentTree[SegT_R(p)].sum += segmentTree[p].add * SeT_SZ(SegT_R(p));
-        segmentTree[p].add = 0;//!!!!!!!
+        segmentTree[SegT_L(p)].Sum += segmentTree[p].add * SegT_SZ(SegT_L(p));
+        segmentTree[SegT_R(p)].Sum += segmentTree[p].add * SegT_SZ(SegT_R(p));
+        segmentTree[p].add = 0;
         SegT_Update(p);
         return;
     }
 
-    private void SegT_Build(long l, long r, long p)
+    private void SegT_Build(int l, int r, int p)
     {
-        segmentTree[p].l = l;
-        segmentTree[p].r = r;
+        segmentTree[p].Left = l;
+        segmentTree[p].Right = r;
         if (l == r)
         {
-            segmentTree[p].min = segmentTree[p].max = segmentTree[p].sum = originalArray[l-1];
+            segmentTree[p].Min = segmentTree[p].Max = segmentTree[p].Sum = originalArray[l];
             return;
         }
-        long mid = (segmentTree[p].l + segmentTree[p].r) >> 1;
+        int mid = segmentTree[p].Left + (segmentTree[p].Right - segmentTree[p].Left) / 2;
         SegT_Build(l, mid, SegT_L(p));
         SegT_Build(mid + 1, r, SegT_R(p));
         SegT_Update(p);
         return;
     }
 
-    private void SegT_Change(long l, long r, long p, long v)
+    private void SegT_Change(int l, int r, int p, long v)
     {
-        if (l <= segmentTree[p].l && segmentTree[p].r <= r)
+        if (l <= segmentTree[p].Left && segmentTree[p].Right <= r)
         {
             segmentTree[p].add += v;
-            segmentTree[p].min += v;
-            segmentTree[p].max += v;
-            segmentTree[p].sum += v * SeT_SZ(p);
+            segmentTree[p].Min += v;
+            segmentTree[p].Max += v;
+            segmentTree[p].Sum += v * SegT_SZ(p);
             return;
         }
         SegT_Spread(p);
-        long mid = (segmentTree[p].l + segmentTree[p].r) >> 1;
+        int mid = segmentTree[p].Left + (segmentTree[p].Right - segmentTree[p].Left) / 2;
         if (l <= mid) SegT_Change(l, r, SegT_L(p), v);
         if (mid < r) SegT_Change(l, r, SegT_R(p), v);
         SegT_Update(p);
         return;
     }
 
-    public long AskSum(long l, long r, long p = 1)
+    public long AskSum(int l, int r, int p = 1)
     {
-        if (l <= segmentTree[p].l && segmentTree[p].r <= r)
+        if (l <= segmentTree[p].Left && segmentTree[p].Right <= r)
         {
-            return segmentTree[p].sum;
+            return segmentTree[p].Sum;
         }
         SegT_Spread(p);
-        long ans = 0, mid = (segmentTree[p].l + segmentTree[p].r) >> 1;
+        long ans = 0;
+        int mid = segmentTree[p].Left + (segmentTree[p].Right - segmentTree[p].Left) / 2;
         if (l <= mid) ans += AskSum(l, r, SegT_L(p));
         if (mid < r) ans += AskSum(l, r, SegT_R(p));
         SegT_Update(p);
         return ans;
     }
 
-    public long AskMax(long l, long r, long p = 1)
+    public long AskMax(int l, int r, int p = 1)
     {
-        if (l <= segmentTree[p].l && segmentTree[p].r <= r)
+        if (l <= segmentTree[p].Left && segmentTree[p].Right <= r)
         {
-            return segmentTree[p].max;
+            return segmentTree[p].Max;
         }
         SegT_Spread(p);
-        long ans = 0, mid = (segmentTree[p].l + segmentTree[p].r) >> 1;
+        long ans = long.MinValue;
+        int mid = segmentTree[p].Left + (segmentTree[p].Right - segmentTree[p].Left) / 2;
         if (l <= mid) ans = Math.Max(ans, AskMax(l, r, SegT_L(p)));
         if (mid < r) ans = Math.Max(ans, AskMax(l, r, SegT_R(p)));
         SegT_Update(p);
         return ans;
     }
 
-    public long AskMin(long l, long r, long p = 1)
+    public long AskMin(int l, int r, int p = 1)
     {
-        if (l <= segmentTree[p].l && segmentTree[p].r <= r)
+        if (l <= segmentTree[p].Left && segmentTree[p].Right <= r)
         {
-            return segmentTree[p].min;
+            return segmentTree[p].Min;
         }
         SegT_Spread(p);
-        long ans = int.MaxValue, mid = (segmentTree[p].l + segmentTree[p].r) >> 1;
+        long ans = long.MaxValue;
+        int mid = segmentTree[p].Left + (segmentTree[p].Right - segmentTree[p].Left) / 2;
         if (l <= mid) ans = Math.Min(ans, AskMin(l, r, SegT_L(p)));
         if (mid < r) ans = Math.Min(ans, AskMin(l, r, SegT_R(p)));
         SegT_Update(p);
