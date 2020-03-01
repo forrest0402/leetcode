@@ -28,3 +28,7 @@ if __name__ == "__main__":
     n = 4
     print('actual: {}; expected:{}'.format(s.trailingZeroes(n), s.raw(n)))
     assert s.trailingZeroes(n) == s.raw(n)
+
+    print(~3)
+    print(bin(8))
+    print(bin(~8))
