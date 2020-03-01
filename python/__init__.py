@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-参考ttps://github.com/azl397985856/leetcode和https://github.com/MisterBooo/LeetCodeAnimation
+参考https://github.com/azl397985856/leetcode和https://github.com/MisterBooo/LeetCodeAnimation
 @Author: xiezizhe
 @Date: 24/2/2020 上午11:29
 """
