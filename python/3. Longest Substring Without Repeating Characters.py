@@ -15,19 +15,18 @@ class Solution:
         visit = dict()
         pre = 0
         for i, v in enumerate(s):
-            if v not in visit:
-                visit[v] = i
+            if v not in visit or visit[v] < pre:
                 if i + 1 - pre >= max_len:
                     max_len = i + 1 - pre
                     res = s[pre:i + 1]
             else:
                 pre = visit[v] + 1
-                visit = {key: value for (key, value) in visit.items() if value >= pre}
-                visit[v] = i
+            visit[v] = i
 
         return len(res)
 
 
 if __name__ == "__main__":
     s = Solution()
-    print(s.lengthOfLongestSubstring("pwwkew"))
+    # print(s.lengthOfLongestSubstring("pwwkewp"))
+    assert s.lengthOfLongestSubstring("fkkasfkwerzvnxcvkjsdflkjqwerkljzslkfjasfdhzxvnzxcjvklsjdfkjlasfdj") == 12
