@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
+@Reference: https://leetcode.com/problems/rotate-image/discuss/18884/Seven-Short-Solutions-(1-to-7-lines)
 @Author: xiezizhe
 @Date: 14/6/2020 下午11:20
 """
@@ -16,7 +17,10 @@ class Solution:
         ny = n - x - 1
         return nx, ny
 
-    def rotate(self, matrix: List[List[int]]) -> None:
+    def rotate(self, A):
+        A[:] = zip(*A[::-1])
+
+    def rotate2(self, matrix: List[List[int]]) -> None:
         """
         Do not return anything, modify matrix in-place instead.
         """
