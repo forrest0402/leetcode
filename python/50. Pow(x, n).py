@@ -8,7 +8,7 @@
 
 class Solution:
 
-    def myPow(self, x: float, n: int) -> float:
+    def myPow2(self, x: float, n: int) -> float:
         if n == 0:
             return 1.0
         if n == 1:
@@ -21,7 +21,7 @@ class Solution:
             flag = False
             n = -n
 
-        res = self.myPow(x, n // 2)
+        res = self.myPow2(x, n // 2)
         if n % 2 == 0:
             res *= res
         else:
@@ -29,6 +29,31 @@ class Solution:
 
         return res if flag else 1.0 / res
 
+    def myPow3(self, x: float, n: int) -> float:
+        if n == 0:
+            return 1.0
+        if n < 0:
+            return 1.0 / self.myPow3(x, -n)
+
+        return self.myPow3(x * x, n // 2) if n % 2 == 0 else x * self.myPow3(x * x, n // 2)
+
+    def myPow(self, x: float, n: int) -> float:
+        flag = True
+        if n < 0:
+            flag = False
+            n = -n
+
+        ans, odd = x, 1
+        while n > 1:
+            if n % 2 != 0:
+                odd *= ans
+            ans = ans * ans
+            n = n // 2
+
+        return ans * odd if flag else 1.0 / (ans * odd)
+
 
 if __name__ == "__main__":
-    pass
+    s = Solution()
+    print(pow(2, -1))
+    print(s.myPow(2, -1))
