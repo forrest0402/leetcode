@@ -10,9 +10,6 @@ from typing import List
 
 class Solution:
     def canJump(self, nums: List[int]) -> bool:
-        if len(nums) == 1:
-            return True
-
         i = 0
         while i < len(nums):
             if nums[i] == 0:
@@ -26,9 +23,9 @@ class Solution:
             if maxi >= len(nums) - 1:
                 return True
 
-        return False
+        return i >= len(nums) - 1
 
 
 if __name__ == "__main__":
     s = Solution()
-    print(s.canJump([2, 3, 1, 1, 4]))
+    print(s.canJump([0,1]))
