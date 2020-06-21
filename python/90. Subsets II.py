@@ -9,6 +9,16 @@ from typing import List
 
 
 class Solution:
+    def subsetsWithDup2(self, nums: List[int]) -> List[List[int]]:
+        ret = [[]]
+        nums.sort()
+        for i, n in enumerate(nums):
+            if i == 0 or n != nums[i - 1]:
+                l = len(ret)
+            for j in range(len(ret) - l, len(ret)):
+                ret.append(ret[j] + [n])
+        return ret
+
     def subsetsWithDup(self, nums: List[int]) -> List[List[int]]:
         ret = [[]]
         dup = set()
@@ -24,3 +34,8 @@ class Solution:
             ret += cur
 
         return ret
+
+
+if __name__ == '__main__':
+    s = Solution()
+    print(s.subsetsWithDup2([1, 2, 2]))
