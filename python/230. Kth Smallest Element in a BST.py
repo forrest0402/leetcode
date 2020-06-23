@@ -41,7 +41,3 @@ class Solution:
     def kthSmallest(self, root: TreeNode, k: int) -> int:
         node, _ = self.dfs(root, k)
         return node.val
-
-
-if __name__ == "__main__":
-    pass
