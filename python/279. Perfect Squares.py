@@ -16,10 +16,19 @@ class Solution:
             return 1
 
         f = math.floor(math.sqrt(n))
-        n -= f * f
-        return self.numSquares(n) + 1
+        dp = [2 ** 31 for _ in range(n + 1)]
+        i = 1
+        while i * i <= n:
+            dp[i * i] = 1
+            i += 1
 
+        for i in range(n + 1):
+            if dp[i] != 2 ** 31:
+                continue
 
-if __name__ == "__main__":
-    s = Solution()
-    print(s.numSquares(1000))
+            j = 1
+            while j * j < i:
+                dp[i] = min(dp[i], dp[i - j * j] + 1)
+                j += 1
+
+        return dp[n]
