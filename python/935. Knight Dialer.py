@@ -5,9 +5,11 @@
 @Date: 11/7/2020 下午9:35
 """
 
+import numpy as np
+
 
 class Solution:
-    def knightDialer(self, N: int) -> int:
+    def knightDialer2(self, N: int) -> int:
 
         dp = [[0 for _ in range(N)] for __ in range(10)]
         for i in range(10):
@@ -28,7 +30,30 @@ class Solution:
         return (dp[0][-1] + dp[1][-1] + dp[2][-1] + dp[3][-1] + dp[4][-1] + dp[5][-1] + dp[6][-1] + dp[7][-1] + dp[8][
             -1] + dp[9][-1]) % (10 ** 9 + 7)
 
+    def knightDialer(self, N):
+        if N == 1:
+            return 10
+
+        mod = 10 ** 9 + 7
+        M = np.array([[0, 0, 0, 0, 1, 0, 1, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 1, 0, 1, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+                      [0, 0, 0, 0, 1, 0, 0, 0, 1, 0],
+                      [1, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [1, 1, 0, 0, 0, 0, 0, 1, 0, 0],
+                      [0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
+                      [0, 1, 0, 1, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 1, 0, 1, 0, 0, 0, 0, 0]])
+        res, N = np.ones(10), N - 1
+        while N:
+            if N % 2:
+                res = np.matmul(res, M) % mod
+            M = (M @ M) % mod
+            N //= 2
+        return int(np.sum(res)) % mod
+
 
 if __name__ == "__main__":
     s = Solution()
-    print(s.knightDialer(15))
+    print(s.knightDialer(20))
