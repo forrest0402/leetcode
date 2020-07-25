@@ -11,6 +11,26 @@ from typing import List
 class Solution:
     def camelMatch(self, queries: List[str], pattern: str) -> List[bool]:
         ret = []
+        for query in queries:
+            idx = 0
+            for q in query:
+                if 'A' <= q <= 'Z':
+                    if idx >= len(pattern) or q != pattern[idx]:
+                        idx = -1
+                        break
+                    idx += 1
+                else:
+                    if idx >= len(pattern):
+                        continue
+                    if q == pattern[idx]:
+                        idx += 1
+
+            ret.append(idx == len(pattern))
+
+        return ret
+
+    def camelMatch2(self, queries: List[str], pattern: str) -> List[bool]:
+        ret = []
         trim_p = [p for p in pattern if 'A' <= p <= 'Z']
         for query in queries:
             trim_q = [q for q in query if 'A' <= q <= 'Z']
