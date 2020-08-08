@@ -7,6 +7,9 @@
 
 from typing import List
 
+import numpy as np
+import tensorflow as tf
+
 
 class Solution:
     def camelMatch(self, queries: List[str], pattern: str) -> List[bool]:
@@ -48,6 +51,11 @@ class Solution:
 
 
 if __name__ == "__main__":
+    a = np.array([0.6**5*0.4**5, (0.5**5)**2])
+    print(a)
+    print(a/np.sum(a))
+    print(tf.nn.softmax(a))
+
     s = Solution()
     # [true,false,true,true,false]
     print(s.camelMatch(["FooBar", "FooBarTest", "FootBall", "FrameBuffer", "ForceFeedBack"], "FB"))
