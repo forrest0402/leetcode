@@ -17,6 +17,7 @@
 *.doc
 *.eps
 *.enl
+/data/
 vldb_style_sample/
 reference.Data/
 reference/
